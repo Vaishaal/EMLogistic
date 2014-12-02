@@ -44,7 +44,7 @@ def load_mat_features(name):
     return get_features(scipy.io.loadmat(DATA_PREFIX + name + '.mat')[name])
 
 def load_small_train(size):
-    return get_features(scipy.io.loadmat(DATA_PREFIX+'train_small.mat')['train'][0][size])
+    return get_features(scipy.io.loadmat(DATA_PREFIX+'/train_small.mat')['train'][0][size])
 
 def noisify(noise,data,prior=0.3):
     data = np.copy(data)
