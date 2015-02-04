@@ -55,10 +55,10 @@ class EMLabels(object):
         fnr = 1 - self.tpr
         p0 = 1 - self.p1
         p1 = self.p1
-        a = (np.power(tpr[np.newaxis].T,y)).prod(axis=0)*p1
-        b = (np.power(fnr[np.newaxis].T,y == 0)).prod(axis=0)*p1
-        c = (np.power(tnr[np.newaxis].T,y == 0)).prod(axis=0)*p0
-        d = (np.power(fpr[np.newaxis].T,y)).prod(axis=0)*p0
+        a = (np.power(tpr.T,y)).prod(axis=0)*p1
+        b = (np.power(fnr.T,y == 0)).prod(axis=0)*p1
+        c = (np.power(tnr.T,y == 0)).prod(axis=0)*p0
+        d = (np.power(fpr.T,y)).prod(axis=0)*p0
         pos = (a*b)/((a*b)+(c*d))
         neg = (c*d)/((a*b) + (c*d))
         return pos > neg
