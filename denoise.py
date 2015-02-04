@@ -6,7 +6,6 @@ import numpy as np
 import numpy.linalg as la
 import scipy.io
 import logging
-import ipdb
 from scipy.stats import bernoulli
 from sklearn import cross_validation, linear_model
 
@@ -17,8 +16,8 @@ from em_labels import EMLabels
 
 
 
-def majority_vote(labels):
-    return np.sum(labels, axis=0) > labels.shape[0]*0.5
+def majority_vote(labels,thresh=0.5):
+    return np.sum(labels, axis=0) > labels.shape[0]*thresh
 
 def mse(labels, true_labels):
     diff = labels - true_labels

@@ -6,7 +6,6 @@ import numpy as np
 import numpy.linalg as la
 import scipy.io
 import logging
-import ipdb
 from scipy.stats import bernoulli
 
 from console_progress import ConsoleProgress
