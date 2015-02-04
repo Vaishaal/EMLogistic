@@ -13,6 +13,7 @@ from sklearn import cross_validation, linear_model
 from console_progress import ConsoleProgress
 from load_mnist import *
 from em_logistic import EMLogistic
+from em_labels import EMLabels
 
 
 
@@ -62,6 +63,7 @@ def main():
     noisy_labels = np.array(noisy_labels)
     logging.info("Average Missclassification raw is " + str(np.average(np.array(errs))))
     majority_vote_labels = majority_vote(noisy_labels)
+
     logging.info("Missclassification majority vote is " + str(missclass(majority_vote_labels, labels_all_cv)))
     clf = linear_model.LogisticRegression()
     cv = cross_validation.ShuffleSplit(len(labels_all_cv), n_iter=3, test_size=0.3, random_state=0)
@@ -72,12 +74,10 @@ def main():
     majority_vote_cv_score = cross_validation.cross_val_score(clf,features_all_cv,majority_vote_labels,scoring="f1",cv=cv)
     logging.info("Majority vote cross-val score is " + str(majority_vote_cv_score))
 
-    clf = EMLogistic()
-    clf.fit(features_all_cv, noisy_labels)
-    logging.info("Missclassification EM is " + str(missclass(clf.labels,labels_all_cv)))
-    em_cv_score = cross_validation.cross_val_score(clf.clf,features_all_cv,clf.labels,scoring="f1",cv=cv)
 
-    logging.info("EM cross-val score is " + str(em_cv_score))
+    clf = EMLabels()
+    clf.fit(noisy_labels)
+    logging.info("Missclassification EM Labels is " + str(missclass(clf.y,labels_all_cv)))
 
 if __name__=='__main__':
     main()
