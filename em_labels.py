@@ -6,7 +6,7 @@ class EMLabels(object):
         self.raw_y = None
         self.decision = decision
         if (logger == None):
-            logger = logger.getLogger('auto-em')
+            logger = logging.getLogger('auto-em')
         self.logger =  logger
         self.pi = None
     def fit(self, Y, max_iter=100):
@@ -39,8 +39,27 @@ class EMLabels(object):
             self.logger.debug("Iteration {0}: del_y={1} ".format(i, del_y))
             if np.all(T1 == self.y):
                 print "CONVERGED in {0} iterations".format(i)
+                print tpr
+                print fpr
                 break
             T1 = self.y
-            self.pi = Pi
+            self.tpr = tpr
+            self.tnr = tnr
+            self.p1 = p1
             self.raw_y = pos
         return self
+    def predict(self, y):
+        tpr = self.tpr
+        fpr = 1 - self.tnr
+        tnr = self.tnr
+        fnr = 1 - self.tpr
+        p0 = 1 - self.p1
+        p1 = self.p1
+        a = (np.power(tpr[np.newaxis].T,y)).prod(axis=0)*p1
+        b = (np.power(fnr[np.newaxis].T,y == 0)).prod(axis=0)*p1
+        c = (np.power(tnr[np.newaxis].T,y == 0)).prod(axis=0)*p0
+        d = (np.power(fpr[np.newaxis].T,y)).prod(axis=0)*p0
+        pos = (a*b)/((a*b)+(c*d))
+        neg = (c*d)/((a*b) + (c*d))
+        return pos > neg
+

@@ -73,10 +73,11 @@ def main():
     majority_vote_cv_score = cross_validation.cross_val_score(clf,features_all_cv,majority_vote_labels,scoring="f1",cv=cv)
     logging.info("Majority vote cross-val score is " + str(majority_vote_cv_score))
 
-
     clf = EMLabels()
     clf.fit(noisy_labels)
     logging.info("Missclassification EM Labels is " + str(missclass(clf.y,labels_all_cv)))
+    print np.all(clf.y == clf.predict(noisy_labels))
+
 
 if __name__=='__main__':
     main()
