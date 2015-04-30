@@ -2,7 +2,7 @@ import numpy as np
 import logging
 
 class EMLabels(object):
-    def __init__(self, decision = 0.5, logger=None):
+    def __init__(self, decision = 0.5, logger=None, max_iter=100):
         self.y = None
         self.raw_y = None
         self.decision = decision
@@ -10,7 +10,8 @@ class EMLabels(object):
             logger = logging.getLogger('auto-em')
         self.logger =  logger
         self.pi = None
-    def fit(self, Y, max_iter=100):
+        self.max_iter = max_iter
+    def fit(self, Y):
         '''
             @param Y is a M x N matrix. N = number of samples, M = number of labellers.
             @param max_iter is the maximum amount of iterations for the EM algorithm
@@ -20,8 +21,8 @@ class EMLabels(object):
 
         # Threshold the floats into integer labels
         T1 = mu.ravel() > self.decision
-
-        for i in range(max_iter):
+        self.iterations = 0
+        for i in range(self.max_iter):
             # BEGIN E STEP
 
             T0 = 1 - T1
@@ -66,15 +67,12 @@ class EMLabels(object):
             self.tnr = tnr
             self.p1 = p1
             self.raw_y = pos
-
+            self.iterations += 1
             if np.all(T1 == self.y):
-                print "CONVERGED in {0} iterations".format(i)
-                print tpr
-                print fpr
+                self.logger.debug("CONVERGED in {0} iterations".format(i))
                 break
             T1 = self.y
             # END M STEP
-        self.iterations = i
         return self
     def predict(self, y):
         tpr = self.tpr
