@@ -47,7 +47,7 @@ def load_small_train(size):
 
 def noisify(noise,data,prior=0.3):
     data = np.copy(data)
-    indices = map(int,np.random.uniform(low=0.0, high=len(data)-1, size=len(data)*noise))
+    indices = map(int,np.random.uniform(low=0.0, high=len(data)-1, size=int(len(data)*noise)))
     noisy = scipy.stats.bernoulli.rvs(prior, len(data)*noise)
     data[indices] = noisy
     return data
